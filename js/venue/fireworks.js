@@ -56,9 +56,11 @@ function boom(x,y,z,vol,launchThump,crackle){ var A=B.audio(); if(!A||!B.night()
 var showT=1.5, finale=0;
 B.finale=function(){ if(!B.night()){ B.setNight(true); B.flash('10:00 pm · the finale'); } finale=7; };
 B.onUpdate(function(dt,t){
-  var on=B.night(); sky.visible=refl.visible=on||shells.length>0||flashLevel>0.01;
+  var on=B.night();
+  if(!on && sky.visible){ shells.length=0; life.fill(0); size.fill(0); flashLevel=0; flash.intensity=0; finale=0; B.waterU.flashC.value.setRGB(0,0,0); g.attributes.size.needsUpdate=true; }   // back to 5 pm: clear the sky
+  sky.visible=refl.visible=on;
   if(B.pxScale){ mSky.uniforms.uScale.value=mRef.uniforms.uScale.value=B.pxScale; }
-  if(!sky.visible) return;
+  if(!on) return;
   if(on){ showT-=dt; if(finale>0){ finale-=dt; if(showT<=0){ launch({h:rnd(70,140)}); if(Math.random()<0.5) launch({h:rnd(90,140),type:'glitter',c1:1}); showT=rnd(0.12,0.3); } }
     else if(showT<=0){ launch(); if(Math.random()<0.25) launch(); showT=rnd(0.7,2.2); } }
   // shells rising, with a little spark trail

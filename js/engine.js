@@ -94,7 +94,7 @@ var M = B.mat = {
   blue: lam(0x8fb1d6), navy: lam(0x24344f), red: lam(0xb4202e), wood: lam(0x6b4a2f), woodDark: lam(0x3a2a1c), black: lam(0x18181a),
   metal: lam(0x8b9097), darkMetal: lam(0x3c3f44), glass: lam(0x3b4d5c,{emissive:0x0}), copper: lam(0xc4876a), rock: lam(0x8c8378),
   bark: lam(0x4d3b2c), leaf: lam(0x3f6b2c), hedge: lam(0x3d5e2a), cream: lam(0xece2cf), sand: lam(0xb9a78a),
-  tent: lam(0xfbfaf6,{side:THREE.DoubleSide,emissive:0x5e5b55}),   // sunlit fabric glows through cushion: lam(0xf2efe6), galv: lam(0xa9adb1)
+  tent: lam(0xfbfaf6,{side:THREE.DoubleSide,emissive:0x5e5b55}), cushion: lam(0xf2efe6), galv: lam(0xa9adb1)   // tent: sunlit fabric glows through
 };
 M.grass.userData.tile=B.tex.grass.tile; M.concrete.userData.tile=B.tex.concrete.tile; M.siding.userData.tile=B.tex.siding.tile;
 M.roof.userData.tile=B.tex.shingle.tile; M.deck.userData.tile=B.tex.deck.tile; M.stone.userData.tile=B.tex.stone.tile;

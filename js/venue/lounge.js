@@ -56,7 +56,8 @@ var THREE = window.THREE, M = B.mat, rnd = B.rnd;
   B.onTod(function(s){ flames.visible=s>0.15; fm.opacity=s; });
   B.onUpdate(function(dt,t){ if(!flames.visible) return; flames.children.forEach(function(m,i){ m.scale.set(1+0.2*Math.sin(t*9+i*2),1+0.3*Math.sin(t*7.3+i),1); m.position.y=0.8+0.06*Math.sin(t*11+i); }); });
   // lanterns on the seawall edge
-  [[cx-2.6,-1.9],[cx+2.6,-1.9],[cx+3.2,1.9]].forEach(function(p){ B.box(0.28,0.5,0.28,p[0],0,p[1],'black'); B.put('lanternGlass',p[0],0.08,p[1],0,0.9); B.glow(p[0],0.28,p[1],0.6,0xffb35c,0.25,true); });
+  [[cx-2.6,-1.9],[cx+2.6,-1.9],[cx+3.2,1.9]].forEach(function(p){ B.box(0.3,0.05,0.3,p[0],0,p[1],'black'); B.box(0.24,0.42,0.24,p[0],0.05,p[1],'lampGlass'); B.cyl(0.03,0.19,0.12,p[0],0.47,p[1],'black',4);
+    B.cyl(0.03,0.03,0.12,p[0],0.08,p[1],'cream',8); B.glow(p[0],0.3,p[1],0.9,0xffb35c,0.25,true); });
   B.place({n:7, name:'Fire pit lounge', desc:'Adirondacks round the fire, right on the water · lit after dark', x:cx, z:cz, r:3.8, at:[cx-0.5,3.6,Math.PI+0.15]});
 })();
 
