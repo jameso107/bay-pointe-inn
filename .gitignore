@@ -1,0 +1,5 @@
+.vercel
+.DS_Store
+node_modules
+# venue/photographer photos: reference only, not ours to publish
+reference/

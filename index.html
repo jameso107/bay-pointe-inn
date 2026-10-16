@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>H &amp; J · Bay Pointe Inn</title>
+<meta name="description" content="Walk through H &amp; J's July 4, 2027 wedding at Bay Pointe Inn on Gun Lake, in a browser or a Meta Quest headset.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+  :root{--navy:#18233a;--ink:#0f1626;--cream:#f6f1e6;--gold:#d8b46a;--blue:#9dbbdc;--muted:#c4cbd6;}
+  html,body{margin:0;height:100%;overflow:hidden;background:var(--ink);font-family:'Avenir Next','Segoe UI',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;}
+  #three{display:block;width:100%;height:100%;cursor:crosshair;touch-action:none;}
+  .hud{position:absolute;color:var(--cream);user-select:none;pointer-events:none;text-shadow:0 1px 6px rgba(0,0,0,.55);}
+  body:not(.started) .hud, body:not(.started) #minimap, body:not(.started) .chip{display:none;}
+  #title{top:14px;left:16px;font-size:13px;letter-spacing:.4px;}
+  #title b{font-family:'Didot','Bodoni 72',Georgia,serif;font-weight:400;font-size:19px;letter-spacing:2px;color:#fff;}
+  #title span{color:var(--muted);}
+  #help{top:48px;left:16px;font-size:12.5px;line-height:1.7;color:#e3e7ee;background:rgba(15,22,38,.5);padding:8px 11px;border-radius:10px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+  #place{bottom:28px;left:50%;transform:translateX(-50%);text-align:center;max-width:84vw;}
+  #place .n{display:inline-block;background:var(--gold);color:#2a210f;font-weight:700;border-radius:999px;min-width:22px;padding:1px 7px;margin-right:9px;font-size:13px;}
+  #place .name{font-family:Georgia,serif;font-size:19px;color:#fff;}
+  #place .desc{font-size:13px;color:#e5e8ee;margin-top:4px;}
+  #flash{top:16%;left:50%;transform:translateX(-50%);font-family:Georgia,serif;font-style:italic;font-size:20px;color:#fff;opacity:0;transition:opacity .5s;text-align:center;max-width:80vw;}
+  #cross{top:50%;left:50%;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.7);transform:translate(-50%,-50%);}
+  body.drone #cross{display:none;}
+  #minimap{position:absolute;top:14px;right:14px;width:232px;height:132px;border-radius:12px;border:1px solid rgba(255,255,255,.35);box-shadow:0 4px 18px rgba(0,0,0,.35);}
+  .chip{position:absolute;font:600 13px 'Avenir Next','Segoe UI',system-ui,sans-serif;color:var(--cream);background:rgba(15,22,38,.62);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:8px 15px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+  .chip:hover{background:rgba(15,22,38,.8);}
+  #todbtn{top:156px;right:14px;}
+  #dronebtn{top:196px;right:14px;}
+  #vrbtn{bottom:18px;right:16px;display:none;color:#2a210f;background:var(--gold);border-color:var(--gold);}
+  #stick{position:absolute;width:100px;height:100px;border-radius:50%;border:2px solid rgba(255,255,255,.45);background:rgba(15,22,38,.25);display:none;pointer-events:none;}
+  #knob{position:absolute;left:30px;top:30px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.6);}
+  #overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:safe center;overflow-y:auto;text-align:center;padding:28px 16px;box-sizing:border-box;color:var(--cream);
+    background:linear-gradient(180deg,rgba(15,22,38,.55) 0%,rgba(15,22,38,.82) 60%,rgba(15,22,38,.95) 100%);}
+  #overlay .eyebrow{font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--blue);margin-bottom:14px;}
+  #overlay h1{font-family:'Didot','Bodoni 72',Georgia,serif;font-weight:400;font-size:clamp(54px,11vw,96px);line-height:1;margin:0;letter-spacing:4px;color:#fff;}
+  #overlay h1 i{font-style:italic;color:var(--gold);font-size:.8em;margin:0 .12em;}
+  #overlay .date{font-family:Georgia,serif;font-style:italic;font-size:19px;color:#f1e7d2;margin:14px 0 4px;}
+  #overlay .where{font-size:14px;color:var(--muted);letter-spacing:.5px;}
+  #overlay .rule{width:56px;height:1px;background:var(--gold);margin:22px auto;}
+  #overlay p.lede{max-width:520px;font-size:15px;line-height:1.6;color:#e5e8ee;margin:0 0 6px;}
+  #overlay .btns{margin-top:22px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+  #overlay .go{font:600 15px 'Avenir Next','Segoe UI',system-ui,sans-serif;cursor:pointer;color:#fff;background:transparent;border:1px solid var(--gold);border-radius:999px;padding:11px 28px;}
+  #overlay .go:hover{background:rgba(216,180,106,.16);}
+  #overlay .go:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+  #overlay .go.vr{display:none;background:var(--gold);color:#2a210f;}
+  #overlay .keys{margin-top:26px;font-size:12.5px;line-height:2.1;color:var(--muted);}
+  #overlay small{display:block;margin-top:18px;color:#8f99aa;font-size:12px;max-width:520px;line-height:1.5;}
+  kbd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);border-radius:4px;padding:0 6px;font-family:inherit;color:#fff;}
+  @media (max-width:640px){ #help{display:none;} #minimap{width:150px;height:86px;} #todbtn{top:108px;} #dronebtn{top:148px;} #title{font-size:11px;} #title span{display:none;} }
+</style>
+</head>
+<body>
+<canvas id="three"></canvas>
+<div class="hud" id="title"><b>H &amp; J</b> &nbsp;<span>July 4, 2027 · Bay Pointe Inn, Gun Lake</span></div>
+<div class="hud" id="help">
+  <kbd>W A S D</kbd> walk &nbsp;<kbd>mouse</kbd> look &nbsp;<kbd>Shift</kbd> stroll faster<br>
+  <kbd>T</kbd> 5 pm ⇄ 10 pm fireworks &nbsp;<kbd>F</kbd> finale<br>
+  <kbd>1</kbd>–<kbd>8</kbd> jump to a spot &nbsp;<kbd>Tab</kbd> drone view<br>
+  <kbd>M</kbd> sound &nbsp;<kbd>H</kbd> hide help
+</div>
+<div class="hud" id="place"></div>
+<div class="hud" id="flash"></div>
+<div class="hud" id="cross"></div>
+<canvas id="minimap" width="464" height="264"></canvas>
+<button class="chip" id="todbtn" type="button">5:00 pm · golden afternoon</button>
+<button class="chip" id="dronebtn" type="button">Drone view</button>
+<button class="chip" id="vrbtn" type="button">Enter VR</button>
+<div id="stick"><div id="knob"></div></div>
+<div id="overlay">
+  <div class="eyebrow">Please join us on the lake</div>
+  <h1>H<i>&amp;</i>J</h1>
+  <div class="date">Sunday, the Fourth of July, 2027</div>
+  <div class="where">Bay Pointe Inn · Gun Lake, Michigan</div>
+  <div class="rule"></div>
+  <p class="lede">Walk the day before it happens: from the inn's lake terrace down to the ceremony lawn, then into the Lakefront Pavilion for dinner and dancing. At 10 pm, fireworks over the water.</p>
+  <div class="btns">
+    <button class="go" type="button">Walk in</button>
+    <button class="go vr" type="button">Enter VR</button>
+  </div>
+  <div class="keys">
+    <kbd>W A S D</kbd> walk · <kbd>mouse</kbd> look · <kbd>T</kbd> 5 pm / 10 pm · <kbd>1</kbd>–<kbd>8</kbd> spots · <kbd>Tab</kbd> drone<br>
+    On a phone: left thumb walks, right thumb looks.
+  </div>
+  <small>A hand-built model from photos and satellite measurements; distances are close, details are a sketch of the plan. Quest: open this page in the Meta Quest Browser and press Enter VR.</small>
+</div>
+<script src="/js/three.min.js"></script>
+<script src="/js/engine.js"></script>
+<script src="/js/venue/site.js"></script>
+<script src="/js/venue/inn.js"></script>
+<script src="/js/venue/pavilion.js"></script>
+<script src="/js/venue/docks.js"></script>
+<script src="/js/venue/ceremony.js"></script>
+<script src="/js/venue/reception.js"></script>
+<script src="/js/venue/lounge.js"></script>
+<script src="/js/venue/fireworks.js"></script>
+<script>
+if (!window.BP || window.BP.failed){ document.getElementById('overlay').innerHTML='<h1>Sorry</h1><p class="lede">The 3D engine could not load. Check your connection and reload.</p>'; }
+else window.BP.run();
+</script>
+</body>
+</html>
